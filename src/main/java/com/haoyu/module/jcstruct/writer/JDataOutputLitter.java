@@ -11,12 +11,16 @@ public class JDataOutputLitter implements JDataOutput
 
 	protected DataOutput dataOutput;
 
+	private byte w[];
+
 	public JDataOutputLitter()
 	{
 
 		bos = new ByteArrayOutputStream();
 
 		dataOutput = new DataOutputStream(bos);
+
+		w = new byte[8];
 	}
 
 	public byte[] pack()
@@ -57,7 +61,9 @@ public class JDataOutputLitter implements JDataOutput
 	@Override
 	public void writeShort(int v) throws IOException
 	{
-		dataOutput.writeShort(v);
+		w[0] = (byte) v;
+		w[1] = (byte) (v >> 8);
+		dataOutput.write(w, 0, 2);
 	}
 
 	@Override
@@ -69,25 +75,38 @@ public class JDataOutputLitter implements JDataOutput
 	@Override
 	public void writeInt(int v) throws IOException
 	{
-		dataOutput.writeInt(v);
+		w[0] = (byte) v;
+		w[1] = (byte) (v >> 8);
+		w[2] = (byte) (v >> 16);
+		w[3] = (byte) (v >> 24);
+		dataOutput.write(w, 0, 4);
+
 	}
 
 	@Override
 	public void writeLong(long v) throws IOException
 	{
-		dataOutput.writeLong(v);
+		w[0] = (byte) v;
+		w[1] = (byte) (v >> 8);
+		w[2] = (byte) (v >> 16);
+		w[3] = (byte) (v >> 24);
+		w[4] = (byte) (v >> 32);
+		w[5] = (byte) (v >> 40);
+		w[6] = (byte) (v >> 48);
+		w[7] = (byte) (v >> 56);
+		dataOutput.write(w, 0, 8);
 	}
 
 	@Override
 	public void writeFloat(float v) throws IOException
 	{
-		dataOutput.writeFloat(v);
+		writeInt(Float.floatToIntBits(v));
 	}
 
 	@Override
 	public void writeDouble(double v) throws IOException
 	{
-		dataOutput.writeDouble(v);
+		writeLong(Double.doubleToLongBits(v));
 	}
 
 	@Override
@@ -146,7 +165,7 @@ public class JDataOutputLitter implements JDataOutput
 		if (len == -1 || len > buffer.length)
 			len = buffer.length;
 		for (int i = 0; i < len; i++)
-			dataOutput.writeShort(buffer[i]);
+			writeShort(buffer[i]);
 
 	}
 
@@ -176,7 +195,7 @@ public class JDataOutputLitter implements JDataOutput
 		if (len == -1 || len > buffer.length)
 			len = buffer.length;
 		for (int i = 0; i < len; i++)
-			dataOutput.writeFloat(buffer[i]);
+			writeFloat(buffer[i]);
 
 	}
 
@@ -186,7 +205,7 @@ public class JDataOutputLitter implements JDataOutput
 		if (len == -1 || len > buffer.length)
 			len = buffer.length;
 		for (int i = 0; i < len; i++)
-			dataOutput.writeDouble(buffer[i]);
+			writeDouble(buffer[i]);
 
 	}
 
@@ -196,7 +215,7 @@ public class JDataOutputLitter implements JDataOutput
 		if (len == -1 || len > buffer.length)
 			len = buffer.length;
 		for (int i = 0; i < len; i++)
-			dataOutput.writeShort((short) buffer[i]);
+			writeShort((short) buffer[i]);
 
 	}
 
@@ -206,7 +225,7 @@ public class JDataOutputLitter implements JDataOutput
 		if (len == -1 || len > buffer.length)
 			len = buffer.length;
 		for (int i = 0; i < len; i++)
-			dataOutput.writeByte((byte) buffer[i]);
+			writeByte((byte) buffer[i]);
 
 	}
 
@@ -220,21 +239,25 @@ public class JDataOutputLitter implements JDataOutput
 	@Override
 	public void writeUshort(int value) throws IOException
 	{
-		dataOutput.writeShort((short) value);
+		writeShort((short) value);
 	}
-	
+
 	@Override
 	public void writeUint(long v) throws IOException
 	{
-		dataOutput.writeInt((int) v);
+		writeInt((int) v);
 
 	}
 
 	@Override
 	public void writeByteArray(byte[] buffer) throws IOException
 	{
-		// TODO Auto-generated method stub
-		
+		dataOutput.write(buffer, 0, buffer.length);
+	}
+
+	public void close() throws IOException
+	{
+		bos.close();
 	}
 
 }

@@ -26,4 +26,6 @@ public interface JDataInput extends DataInput
 	
 	public void readUnShortedArray(int[] buffer) throws IOException;
 	
+	public void close() throws IOException;
+	
 }

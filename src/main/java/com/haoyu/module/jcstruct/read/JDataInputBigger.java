@@ -201,4 +201,10 @@ public class JDataInputBigger implements JDataInput
 		return (w[0] & 0xff);
 	}
 
+	@Override
+	public void close() throws IOException
+	{
+		dataInputStream.close();
+	}
+
 }

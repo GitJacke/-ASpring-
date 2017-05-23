@@ -237,4 +237,10 @@ public class JDataOutputBigger implements JDataOutput
 
 	}
 
+	@Override
+	public void close() throws IOException
+	{
+		bos.close();
+	}
+
 }

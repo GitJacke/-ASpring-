@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
@@ -35,6 +36,8 @@ public abstract class AbstractResolve implements RefreshService
 	private List<UnResolvePostProcess> unResolvePostProcessList;
 
 	private List<UnResolveFieldPostProcess> unResolveFieldPostProcessList;
+	
+	Logger LOG = Logger.getLogger(this.getClass());
 
 	@Override
 	public void refresh(ApplicationContext applicationContext)

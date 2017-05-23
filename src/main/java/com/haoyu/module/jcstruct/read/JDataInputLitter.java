@@ -4,18 +4,19 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-
 public class JDataInputLitter implements JDataInput
 {
 	private DataInputStream dataInputStream;
-	
-	public JDataInputLitter(byte[] data){
+	private byte w[];
+
+	public JDataInputLitter(byte[] data)
+	{
 		dataInputStream = new DataInputStream(new ByteArrayInputStream(data));
+		w = new byte[8];
 	}
 
 	public final long readUnsignedInt() throws IOException
 	{
-		byte[] w = new byte[4];
 		this.readFully(w, 0, 4);
 		return getLong(w, 0);
 	}
@@ -23,16 +24,15 @@ public class JDataInputLitter implements JDataInput
 	public long getLong(byte buf[], int index)
 	{
 		int firstByte = (0x000000FF & ((int) buf[index]));
-		
+
 		int secondByte = (0x000000FF & ((int) buf[index + 1]));
-		
+
 		int thirdByte = (0x000000FF & ((int) buf[index + 2]));
-		
+
 		int fourthByte = (0x000000FF & ((int) buf[index + 3]));
-		
-		long unsignedLong = ((long) (firstByte << 24 | secondByte << 16 | thirdByte << 8 | fourthByte)) & 0xFFFFFFFFL;
-		
-		return unsignedLong;
+
+		return ((long) (fourthByte << 24 | thirdByte << 16 | secondByte << 8 | firstByte)) & 0xFFFFFFFFL;
+
 	}
 
 	public final int readCharC(byte w[]) throws IOException
@@ -42,7 +42,7 @@ public class JDataInputLitter implements JDataInput
 		}
 		return (w[0] & 0xff);
 	}
-	
+
 	public void readBooleanArray(boolean buffer[]) throws IOException
 	{
 		for (int i = 0; i < buffer.length; i++)
@@ -89,7 +89,7 @@ public class JDataInputLitter implements JDataInput
 		for (int i = 0; i < buffer.length; i++)
 			buffer[i] = readDouble();
 	}
-	
+
 	public void readUnShortedArray(int[] buffer) throws IOException
 	{
 		for (int i = 0; i < buffer.length; i++)
@@ -135,13 +135,15 @@ public class JDataInputLitter implements JDataInput
 	@Override
 	public short readShort() throws IOException
 	{
-		return dataInputStream.readShort();
+		dataInputStream.readFully(w, 0, 2);
+		return (short) ((w[1] & 0xff) << 8 | (w[0] & 0xff));
 	}
 
 	@Override
 	public int readUnsignedShort() throws IOException
 	{
-		return dataInputStream.readUnsignedShort();
+		dataInputStream.readFully(w, 0, 2);
+		return ((w[1] & 0xff) << 8 | (w[0] & 0xff));
 	}
 
 	@Override
@@ -153,25 +155,29 @@ public class JDataInputLitter implements JDataInput
 	@Override
 	public int readInt() throws IOException
 	{
-		return dataInputStream.readInt();
+		dataInputStream.readFully(w, 0, 4);
+		return (w[3]) << 24 | (w[2] & 0xff) << 16 | (w[1] & 0xff) << 8 | (w[0] & 0xff);
 	}
 
 	@Override
 	public long readLong() throws IOException
 	{
-		return dataInputStream.readLong();
+		dataInputStream.readFully(w, 0, 8);
+		return (long) (w[7]) << 56
+				| /* long cast needed or shift done modulo 32 */
+				(long) (w[6] & 0xff) << 48 | (long) (w[5] & 0xff) << 40 | (long) (w[4] & 0xff) << 32 | (long) (w[3] & 0xff) << 24 | (long) (w[2] & 0xff) << 16 | (long) (w[1] & 0xff) << 8 | (long) (w[0] & 0xff);
 	}
 
 	@Override
 	public float readFloat() throws IOException
 	{
-		return dataInputStream.readFloat();
+		return Float.intBitsToFloat(readInt());
 	}
 
 	@Override
 	public double readDouble() throws IOException
 	{
-		return dataInputStream.readDouble();
+		return Double.longBitsToDouble(readLong());
 	}
 
 	@Override
@@ -189,8 +195,17 @@ public class JDataInputLitter implements JDataInput
 	@Override
 	public int readCharC() throws IOException
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		readFully(w);
+		if (w[0] < 0) {
+			return w[0] + 256;
+		}
+		return (w[0] & 0xff);
+	}
+
+	@Override
+	public void close() throws IOException
+	{
+		dataInputStream.close();
 	}
 
 }

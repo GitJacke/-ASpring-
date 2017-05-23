@@ -9,8 +9,7 @@ public abstract class AbstractRefreshServiceManager implements RefreshServiceMan
 {
 
 	Logger LOG = Logger.getLogger(this.getClass());
-	
-	
+
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event)
 	{
@@ -25,8 +24,6 @@ public abstract class AbstractRefreshServiceManager implements RefreshServiceMan
 		}
 	}
 
-
 	abstract public void refresh(ApplicationContext applicationContext);
 
-	
 }

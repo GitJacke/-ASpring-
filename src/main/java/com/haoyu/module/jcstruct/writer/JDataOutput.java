@@ -36,4 +36,6 @@ public interface JDataOutput extends DataOutput
 	
 	public void writeUbyteArray(int[] buffer, int len) throws IOException;
 	
+	public void close() throws IOException;
+	
 }

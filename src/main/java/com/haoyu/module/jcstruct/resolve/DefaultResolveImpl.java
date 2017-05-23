@@ -24,22 +24,34 @@ public class DefaultResolveImpl extends AbstractResolve implements DefaultResolv
 		// 解析出content
 		Template template = getTCTemplate(id);
 
-		JDataOutput dataOutput = createJDataOutput();
+		JDataOutput dataOutput = null;
+		try {
+			dataOutput = createJDataOutput();
 
-		// 遍历头
-		Field[] fields = getTcHeaderFields();
+			// 遍历头
+			Field[] fields = getTcHeaderFields();
 
-		writerFields(fields, record, dataOutput);
+			writerFields(fields, record, dataOutput);
 
-		// 解析数据
-		fields = template.getFields();
+			// 解析数据
+			fields = template.getFields();
 
-		writerFields(fields, record, dataOutput);
+			writerFields(fields, record, dataOutput);
 
-		// 解析后处理
-		afterUnresolve(record, dataOutput);
+			// 解析后处理
+			afterUnresolve(record, dataOutput);
 
-		return dataOutput.pack();
+			return dataOutput.pack();
+		} catch (IOException e) {
+			LOG.error("反解析协议异常:" + e.getMessage(), e);
+			throw e;
+		} finally {
+			if (null != dataOutput) {
+				// 释放资源
+				dataOutput.close();
+			}
+		}
+
 	}
 
 	@Override
@@ -48,40 +60,54 @@ public class DefaultResolveImpl extends AbstractResolve implements DefaultResolv
 
 		Field[] headerFields = getFcHeaderFields();
 
-		JDataInput dataInput = createJDataInput(data);
+		JDataInput dataInput = null;
 
-		JSONObject result = new JSONObject();
+		try {
 
-		readFields(headerFields, result, dataInput);
+			dataInput = createJDataInput(data);
 
-		// 判断headJson所属协议
-		String protocolNo = result.getString(getFcHeaderKey());
+			JSONObject result = new JSONObject();
 
-		Template template = getFCTemplate(protocolNo);
+			readFields(headerFields, result, dataInput);
 
-		if (!template.isMix()) {
+			// 判断headJson所属协议
+			String protocolNo = result.getString(getFcHeaderKey());
 
-			readFields(template.getFields(), result, dataInput);
+			Template template = getFCTemplate(protocolNo);
 
-			return dealResult(protocolNo, result, rowMapper);
+			if (!template.isMix()) {
 
+				readFields(template.getFields(), result, dataInput);
+
+				return dealResult(protocolNo, result, rowMapper);
+
+			}
+
+			// 解析First
+
+			readFields(template.getFirstFields(), result, dataInput);
+
+			// 根据第二个协议解析 map fields
+			String mixKeyValue = result.getString(template.getMixKey());
+
+			Field[] mixFields = template.getMixInfoFields(mixKeyValue);
+
+			readFields(mixFields, result, dataInput);
+
+			// 解析end
+			readFields(template.getEndFields(), result, dataInput);
+
+			return dealResult(getMixDispatchCenterKey(protocolNo, mixKeyValue), result, rowMapper);
+
+		} catch (IOException e) {
+			LOG.error("解析协议异常:" + e.getMessage(), e);
+			throw e;
+		} finally {
+			if (null != dataInput) {
+				// 释放资源
+				dataInput.close();
+			}
 		}
-
-		// 解析First
-
-		readFields(template.getFirstFields(), result, dataInput);
-
-		// 根据第二个协议解析 map fields
-		String mixKeyValue = result.getString(template.getMixKey());
-
-		Field[] mixFields = template.getMixInfoFields(mixKeyValue);
-
-		readFields(mixFields, result, dataInput);
-
-		// 解析end
-		readFields(template.getEndFields(), result, dataInput);
-
-		return dealResult(getMixDispatchCenterKey(protocolNo, mixKeyValue), result, rowMapper);
 
 	}
 
