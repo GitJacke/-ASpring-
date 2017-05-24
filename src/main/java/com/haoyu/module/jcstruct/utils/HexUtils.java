@@ -1,9 +1,5 @@
 package com.haoyu.module.jcstruct.utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 public final class HexUtils
 {
 
@@ -25,7 +21,7 @@ public final class HexUtils
 		}
 		return Integer.parseInt(str);
 	}
-	
+
 	public static Long getLongFromHex(String str)
 	{
 		if (str.startsWith("0X") || str.startsWith("0x")) {
@@ -79,7 +75,7 @@ public final class HexUtils
 
 	public static String bytesToHexString(byte[] src)
 	{
-		
+
 		StringBuilder stringBuilder = new StringBuilder("");
 		if (src == null || src.length <= 0) {
 			return null;
@@ -115,6 +111,15 @@ public final class HexUtils
 
 		return s2.toString();
 	}
-	
+
+	public static float getFloatDivide(int a, float b)
+	{
+		return (float)(Math.round(a / b * 100))/100;
+	}
+
+	public static float getFloatMultiply(int a, float b)
+	{
+		return (float)(Math.round(a * b * 100))/100;
+	}
 
 }

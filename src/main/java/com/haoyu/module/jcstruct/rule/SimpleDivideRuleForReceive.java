@@ -6,13 +6,13 @@ public class SimpleDivideRuleForReceive implements SimpleComputerRule
 	@Override
 	public Number getIntValue(Number old, Number add)
 	{
-		return (float)(old.doubleValue() / add.doubleValue());
+		return (float)(Math.round(old.floatValue() / add.floatValue() * 100))/100;
 	}
 
 	@Override
 	public Number getLongValue(Number old, Number add)
 	{
-		return (float)(old.doubleValue() / add.doubleValue());
+		return (double)(Math.round(old.floatValue() / add.floatValue() * 100))/100;
 	}
 
 	@Override
