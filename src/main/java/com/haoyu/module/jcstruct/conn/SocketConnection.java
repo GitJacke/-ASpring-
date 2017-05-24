@@ -21,7 +21,7 @@ public abstract class SocketConnection extends Thread implements Connection
 	// 能将解析头之后的数据流发送到下一个环节
 	protected DefaultResolve defaultResolve;
 
-	protected boolean isStop;
+	protected volatile boolean isStop;
 
 	protected Socket socket;
 

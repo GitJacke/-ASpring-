@@ -37,6 +37,8 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 
 	@Autowired
 	private DefaultResolve defaultResolve;
+	
+	private volatile boolean isStop;
 
 	public int getByteOrder()
 	{
@@ -47,8 +49,6 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 	{
 		this.byteOrder = byteOrder;
 	}
-
-	private boolean isStop;
 
 	public int getPort()
 	{
