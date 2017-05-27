@@ -17,8 +17,8 @@ public abstract class AbstractRefreshServiceManager implements RefreshServiceMan
 			try {
 				refresh(event.getApplicationContext());
 			} catch (Exception e) {
-				LOG.error("初始化加载HandleMessageService处理失败!", e);
-				System.exit(0);
+				//LOG.error("初始化加载HandleMessageService处理失败!", e);
+				throw new RuntimeException("初始化加载HandleMessageService处理失败!"+e.getMessage());
 			}
 
 		}
