@@ -12,6 +12,8 @@
 		"
 	default-lazy-init="false">
 
+    <!-- 全局配置 -->
+	<cjava:config order="1" isDebug="false" port="19999" maxConnections="20" headSign="AAAA" footSign="AA55"/>
 	
 	<bean id="byteArrayJFieldOpt" class="com.haoyu.module.jcstruct.opt.ByteArrayJFieldOpt"></bean>
 	

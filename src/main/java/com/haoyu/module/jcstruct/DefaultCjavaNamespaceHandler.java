@@ -29,7 +29,7 @@ public class DefaultCjavaNamespaceHandler extends NamespaceHandlerSupport
 		
 		registerBeanDefinitionParser("refreshManager", new CjavaRefreshManagerBeanDefinitionParser());
 		
-		
+		registerBeanDefinitionParser("config", new CjavaConfigBeanDefinitionParser());
 
 	}
 

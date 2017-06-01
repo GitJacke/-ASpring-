@@ -119,6 +119,13 @@
 			<xsd:attribute name="realLengthRule" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
+	
+	<xsd:element name="config">
+		<xsd:complexType>
+			<xsd:attributeGroup ref="settingAttr" />
+		</xsd:complexType>
+	</xsd:element>
+	
 
 	<xsd:attributeGroup name="ctAttr">
 		<xsd:attribute name="name" type="xsd:string" use="required" />
@@ -173,6 +180,15 @@
 		<xsd:attribute name="desc" type="xsd:string" />
 		<xsd:attribute name="class" type="xsd:string"
 			default="com.haoyu.module.jcstruct.opt.DefaultOptManager" />
+	</xsd:attributeGroup>
+	
+	<xsd:attributeGroup name="settingAttr">
+			<xsd:attribute name="isDebug" type="xsd:string" />
+			<xsd:attribute name="order" type="xsd:string"/>
+			<xsd:attribute name="port" type="xsd:string"/>
+			<xsd:attribute name="maxConnections" type="xsd:string"/>
+			<xsd:attribute name="headSign" type="xsd:string"/>
+			<xsd:attribute name="footSign" type="xsd:string"/>
 	</xsd:attributeGroup>
 
 </xsd:schema>

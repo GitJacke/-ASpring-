@@ -1,9 +1,13 @@
 package com.haoyu.module.jcstruct;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.haoyu.module.jcstruct.common.SystemConsts;
+import com.haoyu.module.jcstruct.utils.HexUtils;
 
 public class TestMatch
 {
@@ -17,6 +21,21 @@ public class TestMatch
 		float f1 = 36F;
 		
 		System.out.println((int)f1);
+		
+		String head = HexUtils.bytesToHexString(SystemConsts.head);
+
+		
+		String foot = HexUtils.bytesToHexString(SystemConsts.foot);
+		
+		System.out.println(head);
+		System.out.println(foot);
+		
+		byte[] headbyte = HexUtils.hexStringToBytes("aaaa");
+		byte[] footbyte = HexUtils.hexStringToBytes("aa55");
+		
+		System.out.println(Arrays.toString(headbyte));
+		
+		System.out.println(Arrays.toString(footbyte));
 	}
 	
 	public  static List<String> getTeacherList(String managers){

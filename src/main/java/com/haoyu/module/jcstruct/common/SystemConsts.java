@@ -34,9 +34,9 @@ public final class SystemConsts
 	public final static String TC_HEADER_DEFAULT_ID = "tc-header";
 	public final static String TC_HEADER_DEFAULT_NAME = "tc-header";
 
-	public final static int port = 19999;
+	public  static int port = 19999;
 
-	public final static int maxConnections = 10;
+	public  static int maxConnections = 10;
 
 	public static byte[] head = new byte[] { -86, -86 };
 

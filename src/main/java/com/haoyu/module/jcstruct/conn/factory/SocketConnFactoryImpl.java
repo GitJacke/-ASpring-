@@ -3,7 +3,6 @@ package com.haoyu.module.jcstruct.conn.factory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteOrder;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -18,6 +17,7 @@ import com.haoyu.module.jcstruct.conn.DeciseSocketConnection;
 import com.haoyu.module.jcstruct.conn.SocketConnection;
 import com.haoyu.module.jcstruct.dispatch.DispatchCenterService;
 import com.haoyu.module.jcstruct.resolve.DefaultResolve;
+import com.haoyu.module.jcstruct.utils.HexUtils;
 
 public class SocketConnFactoryImpl extends AbstractConnFactory implements SocketConnFactory
 {
@@ -25,8 +25,10 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 	private int port = SystemConsts.port;
 
 	private int maxConnections = SystemConsts.maxConnections;
-
-	private int byteOrder;
+	
+	private String headSign;
+	
+	private String footSign;
 
 	private Map<String, SocketConnection> connections;
 
@@ -40,14 +42,15 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 	
 	private volatile boolean isStop;
 
-	public int getByteOrder()
+
+	public void setHeadSign(String headSign)
 	{
-		return byteOrder;
+		this.headSign = headSign;
 	}
 
-	public void setByteOrder(int byteOrder)
+	public void setFootSign(String footSign)
 	{
-		this.byteOrder = byteOrder;
+		this.footSign = footSign;
 	}
 
 	public int getPort()
@@ -111,13 +114,13 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 	public void afterPropertiesSet() throws Exception
 	{
 		// 初始化一些参数
-		if (byteOrder == 0) {
-			SystemConsts.order = ByteOrder.LITTLE_ENDIAN;
-			LOG.info("当前安装小端顺序读取数据！");
-		} else {
-			SystemConsts.order = ByteOrder.BIG_ENDIAN;
-			LOG.info("当前安装大端顺序读取数据！");
+		if(null != headSign){
+			SystemConsts.head = HexUtils.hexStringToBytes(headSign);
 		}
+		if(null != footSign){
+			SystemConsts.foot = HexUtils.hexStringToBytes(footSign);
+		}
+		
 		initConnections();
 		start();
 		//加入网关是否断电的检测
