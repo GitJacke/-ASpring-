@@ -41,5 +41,7 @@ public final class SystemConsts
 	public static byte[] head = new byte[] { -86, -86 };
 
 	public static byte[] foot = new byte[] { -86, 85 };
+	
+	public static int maxRetryTimes = 3;
 
 }

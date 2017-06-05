@@ -1,12 +1,8 @@
 package com.haoyu.module.jcstruct;
 
 import java.nio.ByteOrder;
-import java.util.List;
-
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -28,16 +24,16 @@ public class CjavaConfigBeanDefinitionParser extends CjavaAbstractSingleBeanDefi
 	{
 		// 解析标签
 		NamedNodeMap attrs = element.getAttributes();
-		if(null != attrs){
+		if (null != attrs) {
 			int length = attrs.getLength();
-			for(int i=0;i<length;i++){
+			for (int i = 0; i < length; i++) {
 				attrs.item(i).getNodeValue();
-				//Element el = (Element) attrs.item(i);
+				// Element el = (Element) attrs.item(i);
 				Node node = attrs.item(i);
-				doAttr(node.getNodeName(),node.getNodeValue());
+				doAttr(node.getNodeName(), node.getNodeValue());
 			}
 		}
-		
+
 	}
 
 	private void doAttr(String tag, String value)
@@ -62,6 +58,15 @@ public class CjavaConfigBeanDefinitionParser extends CjavaAbstractSingleBeanDefi
 			SystemConsts.head = HexUtils.hexStringToBytes(value);
 		} else if (tag.equals("footSign")) {
 			SystemConsts.foot = HexUtils.hexStringToBytes(value);
+		} else if (tag.equals("maxReadTemp")) {
+			Integer maxReadTemp = Integer.parseInt(value);
+			SystemConsts.max_read_version_one = maxReadTemp.intValue();
+		} else if (tag.equals("maxRead")) {
+			Integer maxRead = Integer.parseInt(value);
+			SystemConsts.max_read = maxRead.intValue();
+		} else if (tag.equals("maxRetryTimes")) {
+			Integer maxRetryTimes = Integer.parseInt(value);
+			SystemConsts.maxRetryTimes = maxRetryTimes.intValue();
 		}
 
 	}

@@ -189,6 +189,9 @@
 			<xsd:attribute name="maxConnections" type="xsd:string"/>
 			<xsd:attribute name="headSign" type="xsd:string"/>
 			<xsd:attribute name="footSign" type="xsd:string"/>
+			<xsd:attribute name="maxReadTemp" type="xsd:string"/>
+			<xsd:attribute name="maxRead" type="xsd:string"/>
+			<xsd:attribute name="maxRetryTimes" type="xsd:string"/>
 	</xsd:attributeGroup>
 
 </xsd:schema>
