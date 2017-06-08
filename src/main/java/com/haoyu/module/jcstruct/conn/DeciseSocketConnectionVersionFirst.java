@@ -11,7 +11,7 @@ public class DeciseSocketConnectionVersionFirst extends DeciseSocketConnection
 	@Override
 	public Connection decise(Socket t, DispatchCenterService disCenterService, DefaultResolve resovle)
 	{
-		Connection connection = new SocketConnectionVersionFirst(t, disCenterService, resovle);
+		Connection connection = new SocketConnectionVersionFirst(t, disCenterService, resovle, getCheckBeans());
 		return connection;
 	}
 

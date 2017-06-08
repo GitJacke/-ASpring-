@@ -11,7 +11,7 @@ public class DefaultDeciseSocketConnection extends DeciseSocketConnection
 	@Override
 	public Connection decise(Socket t, DispatchCenterService disCenterService, DefaultResolve resovle)
 	{
-		Connection connection = new SocketConnectionImpl(t, disCenterService, resovle);
+		Connection connection = new SocketConnectionImpl(t, disCenterService, resovle, getCheckBeans());
 		return connection;
 	}
 

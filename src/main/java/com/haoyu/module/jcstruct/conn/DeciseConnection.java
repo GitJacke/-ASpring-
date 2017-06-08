@@ -1,5 +1,6 @@
 package com.haoyu.module.jcstruct.conn;
 
+
 import com.haoyu.module.jcstruct.dispatch.DispatchCenterService;
 import com.haoyu.module.jcstruct.resolve.DefaultResolve;
 

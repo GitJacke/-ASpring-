@@ -18,13 +18,13 @@ public class SimpleMultiplyRuleForReceive implements SimpleComputerRule
 	@Override
 	public float getFloatValue(Number old, Number add)
 	{
-		return old.floatValue() * add.floatValue();
+		return (float)(Math.round(old.floatValue() * add.floatValue() * 100))/100;
 	}
 
 	@Override
 	public double getDoubleValue(Number old, Number add)
 	{
-		return old.doubleValue() * add.doubleValue();
+		return (double)(Math.round(old.floatValue() * add.floatValue() * 100))/100;
 	}
 
 }

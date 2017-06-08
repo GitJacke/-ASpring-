@@ -13,7 +13,7 @@ public class DefaultCjavaNamespaceHandler extends NamespaceHandlerSupport
 
 		registerBeanDefinitionParser("tch", new CjavaTcHeaderBeanDefinitionParser());
 
-		registerBeanDefinitionParser("check", new CjavaCheckBeanDefinitionParser());
+		registerBeanDefinitionParser("checks", new CjavaCheckBeanDefinitionParser());
 
 		registerBeanDefinitionParser("tct", new CjavaTcTemplateBeanDefinitionParser());
 

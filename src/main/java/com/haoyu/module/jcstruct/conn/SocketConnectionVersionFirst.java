@@ -3,11 +3,14 @@ package com.haoyu.module.jcstruct.conn;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.haoyu.module.jcstruct.common.SystemConsts;
 import com.haoyu.module.jcstruct.dispatch.DispatchCenterService;
+import com.haoyu.module.jcstruct.interceptor.CheckBeans;
+import com.haoyu.module.jcstruct.interceptor.CheckInterceptor;
 import com.haoyu.module.jcstruct.resolve.DefaultResolve;
 import com.haoyu.module.jcstruct.utils.HexUtils;
 
@@ -30,9 +33,9 @@ public class SocketConnectionVersionFirst extends SocketConnection
 		return (b0 == SystemConsts.foot[0] && b1 == SystemConsts.foot[1]);
 	}
 
-	public SocketConnectionVersionFirst(Socket socket, DispatchCenterService dispatchCenterService, DefaultResolve defaultResolve)
+	public SocketConnectionVersionFirst(Socket socket, DispatchCenterService dispatchCenterService, DefaultResolve defaultResolve,CheckBeans checkBeans)
 	{
-		super(socket, dispatchCenterService, defaultResolve);
+		super(socket, dispatchCenterService, defaultResolve,checkBeans);
 	}
 
 	public byte[] read() throws IOException

@@ -2,9 +2,12 @@
 
 <xsd:schema xmlns="http://www.haoyu.com/schema/cjava"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.haoyu.com/schema/cjava"
+	xmlns:beans="http://www.springframework.org/schema/beans"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 
 	<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+	
+	<xsd:import namespace="http://www.springframework.org/schema/beans" schemaLocation="http://www.springframework.org/schema/beans/spring-beans-4.2.xsd"/>
 
 	<xsd:element name="tct">
 		<xsd:complexType>
@@ -25,7 +28,7 @@
 				<xsd:choice minOccurs="0" maxOccurs="unbounded">
 					<xsd:element ref="field" />
 					<xsd:element ref="fieldGroup" />
-					<xsd:element ref="branchs" maxOccurs="1"/>
+					<xsd:element ref="branchs" maxOccurs="1" />
 				</xsd:choice>
 			</xsd:sequence>
 			<xsd:attributeGroup ref="ctAttr" />
@@ -50,7 +53,7 @@
 			<xsd:attributeGroup ref="fieldHeaderAttr" />
 		</xsd:complexType>
 	</xsd:element>
-	
+
 	<xsd:element name="optManager">
 		<xsd:complexType>
 			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
@@ -61,12 +64,36 @@
 	</xsd:element>
 
 
-	<xsd:element name="check">
+	<xsd:element name="checks">
 		<xsd:complexType>
-			<xsd:attribute name="name" type="xsd:string" default="bcc" />
-			<xsd:attribute name="class" type="xsd:string" default="com.haoyu.module.jcstruct.check.DefaultCJavaCheckImpl" />
-			<xsd:attribute name="id" type="xsd:string" default="bcc"/>
-			<xsd:attribute name="desc" type="xsd:string" />
+			<xsd:choice maxOccurs="unbounded">
+				<xsd:choice>
+					<xsd:element ref="beans:bean">
+					</xsd:element>
+					<xsd:element ref="beans:ref">
+					</xsd:element>
+				</xsd:choice>
+
+				<xsd:element name="check">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="contains" maxOccurs="unbounded">
+								<xsd:complexType>
+									<xsd:attribute name="id" type="xsd:string" use="required">
+									</xsd:attribute>
+								</xsd:complexType>
+							</xsd:element>
+							<xsd:choice>
+								<xsd:element ref="beans:bean">
+								</xsd:element>
+								<xsd:element ref="beans:ref">
+								</xsd:element>
+							</xsd:choice>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+
+			</xsd:choice>
 		</xsd:complexType>
 	</xsd:element>
 
@@ -75,7 +102,7 @@
 		<xsd:attribute name="keyValue" type="xsd:string" use="required" />
 		<xsd:attribute name="desc" type="xsd:string" />
 	</xsd:attributeGroup>
-	
+
 	<xsd:element name="branch">
 		<xsd:complexType>
 			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
@@ -84,7 +111,7 @@
 			<xsd:attributeGroup ref="branchAttr" />
 		</xsd:complexType>
 	</xsd:element>
-	
+
 
 	<xsd:element name="branchs">
 		<xsd:complexType>
@@ -119,13 +146,13 @@
 			<xsd:attribute name="realLengthRule" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
-	
+
 	<xsd:element name="config">
 		<xsd:complexType>
 			<xsd:attributeGroup ref="settingAttr" />
 		</xsd:complexType>
 	</xsd:element>
-	
+
 
 	<xsd:attributeGroup name="ctAttr">
 		<xsd:attribute name="name" type="xsd:string" use="required" />
@@ -143,55 +170,55 @@
 		<xsd:attribute name="class" type="xsd:string"
 			default="com.haoyu.module.jcstruct.DefaultHeader" />
 	</xsd:attributeGroup>
-	
+
 	<xsd:element name="templateContainer">
 		<xsd:complexType>
 			<xsd:attribute name="class" type="xsd:string"
-			default="com.haoyu.module.jcstruct.template.DefaultTemplateContainer" />
+				default="com.haoyu.module.jcstruct.template.DefaultTemplateContainer" />
 			<xsd:attribute name="desc" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
-	
+
 	<xsd:element name="dispatchCenterService">
 		<xsd:complexType>
 			<xsd:attribute name="class" type="xsd:string"
-			default="com.haoyu.module.jcstruct.dispatch.DefaultDispatchCenterServiceImpl" />
+				default="com.haoyu.module.jcstruct.dispatch.DefaultDispatchCenterServiceImpl" />
 			<xsd:attribute name="desc" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
-	
+
 	<xsd:element name="refreshManager">
 		<xsd:complexType>
 			<xsd:attribute name="class" type="xsd:string"
-			default="com.haoyu.module.jcstruct.refresh.RefreshServiceManager" />
+				default="com.haoyu.module.jcstruct.refresh.RefreshServiceManager" />
 			<xsd:attribute name="desc" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
-	
+
 	<xsd:element name="optManagerOne">
 		<xsd:complexType>
-			<xsd:attribute name="class" type="xsd:string"/>
-			<xsd:attribute name="key" type="xsd:string"  use="required"/>
+			<xsd:attribute name="class" type="xsd:string" />
+			<xsd:attribute name="key" type="xsd:string" use="required" />
 			<xsd:attribute name="value-ref" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
-	
+
 	<xsd:attributeGroup name="optManagerAttr">
 		<xsd:attribute name="desc" type="xsd:string" />
 		<xsd:attribute name="class" type="xsd:string"
 			default="com.haoyu.module.jcstruct.opt.DefaultOptManager" />
 	</xsd:attributeGroup>
-	
+
 	<xsd:attributeGroup name="settingAttr">
-			<xsd:attribute name="isDebug" type="xsd:string" />
-			<xsd:attribute name="order" type="xsd:string"/>
-			<xsd:attribute name="port" type="xsd:string"/>
-			<xsd:attribute name="maxConnections" type="xsd:string"/>
-			<xsd:attribute name="headSign" type="xsd:string"/>
-			<xsd:attribute name="footSign" type="xsd:string"/>
-			<xsd:attribute name="maxReadTemp" type="xsd:string"/>
-			<xsd:attribute name="maxRead" type="xsd:string"/>
-			<xsd:attribute name="maxRetryTimes" type="xsd:string"/>
+		<xsd:attribute name="isDebug" type="xsd:string" />
+		<xsd:attribute name="order" type="xsd:string" />
+		<xsd:attribute name="port" type="xsd:string" />
+		<xsd:attribute name="maxConnections" type="xsd:string" />
+		<xsd:attribute name="headSign" type="xsd:string" />
+		<xsd:attribute name="footSign" type="xsd:string" />
+		<xsd:attribute name="maxReadTemp" type="xsd:string" />
+		<xsd:attribute name="maxRead" type="xsd:string" />
+		<xsd:attribute name="maxRetryTimes" type="xsd:string" />
 	</xsd:attributeGroup>
 
 </xsd:schema>

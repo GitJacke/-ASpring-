@@ -1,6 +1,5 @@
 package com.haoyu.module.jcstruct.model;
 
-
 public class SimpleValueRule extends SimpleRule
 {
 
@@ -16,4 +15,8 @@ public class SimpleValueRule extends SimpleRule
 		this.value = value;
 	}
 
+	public Number computer(Number old)
+	{
+		return this.getRule().getDoubleValue(old, value);
+	}
 }
