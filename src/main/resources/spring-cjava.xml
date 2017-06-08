@@ -15,6 +15,19 @@
     <!-- 全局配置 -->
 	<cjava:config order="1" isDebug="false" port="19999" maxConnections="20" headSign="AAAA" footSign="AA55"/>
 	
+	<!-- 配置connectionFactory -->
+	<bean class="com.haoyu.module.jcstruct.conn.factory.SocketConnFactoryImpl">
+		<property name="port" value="19999"></property>
+		<property name="maxConnections" value="20"></property>
+		<property name="headSign" value="AAAA"></property>
+		<property name="footSign" value="AA55"></property>
+		<property name="deciseConnection" ref="deciseConnection"></property>
+	</bean>
+
+	<bean id="deciseConnection"
+		class="com.haoyu.module.jcstruct.conn.DeciseSocketConnectionVersionFirst"></bean>
+		
+	
 	<bean id="byteArrayJFieldOpt" class="com.haoyu.module.jcstruct.opt.ByteArrayJFieldOpt"></bean>
 	
 	<cjava:templateContainer/>
@@ -23,6 +36,32 @@
 	</cjava:optManager>
 	<cjava:dispatchCenterService/>
 	<cjava:refreshManager/>
+	
+	<!-- 效仿spring拦截器配置  自定义拦截器设置-->
+	<cjava:checks>
+		<cjava:check>
+			<cjava:contains id="*" />
+			<bean class="com.haoyu.module.jcstruct.test.handle.SgckBccCheck">
+				<property name="excludeFileNames">
+					<array value-type="java.lang.String">
+						<value>BCC</value>
+						<value>Constant_Up_Stop</value>
+					</array>
+				</property>
+			</bean>
+		</cjava:check>
+		<cjava:check>
+			<cjava:contains id="2,4_4" />
+			<bean class="com.haoyu.module.jcstruct.test.handle.SgckReComputeValueInterceptor">
+				<property name="rules">
+					<map>
+						<entry key="Temperature" value="{*}{0.01}"></entry>
+					</map>
+				</property>
+			</bean>
+		</cjava:check>
+	</cjava:checks>
+	
 	
 	
 	<context:component-scan base-package="com.haoyu.module.jcstruct.test.handle" />
