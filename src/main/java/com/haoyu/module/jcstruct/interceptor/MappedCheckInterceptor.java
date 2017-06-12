@@ -26,15 +26,27 @@ public final class MappedCheckInterceptor implements CheckInterceptor
 	}
 
 	@Override
-	public boolean check(JSONObject message) throws Exception
+	public boolean checkAfter(JSONObject message) throws Exception
 	{
-		return checkInterceptor.check(message);
+		return checkInterceptor.checkAfter(message);
 	}
 
 	@Override
-	public byte[] dealError(JSONObject message) throws Exception
+	public byte[] checkAfterError(JSONObject message) throws Exception
 	{
-		return checkInterceptor.dealError(message);
+		return checkInterceptor.checkAfterError(message);
+	}
+
+	@Override
+	public boolean checkBefore(byte[] orgData) throws Exception
+	{
+		return checkInterceptor.checkBefore(orgData);
+	}
+
+	@Override
+	public byte[] checkBeforeError(byte[] orgData) throws Exception
+	{
+		return checkInterceptor.checkBeforeError(orgData);
 	}
 
 }

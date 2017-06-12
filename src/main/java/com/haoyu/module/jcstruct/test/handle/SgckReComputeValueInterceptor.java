@@ -58,11 +58,11 @@ public class SgckReComputeValueInterceptor implements CheckInterceptor, Initiali
 	}
 
 	@Override
-	public boolean check(JSONObject message) throws Exception
+	public boolean checkAfter(JSONObject message) throws Exception
 	{
 		// 只是为了改变值
 		// realValueRule="{*}{0.01}"
-		if(!CollectionUtils.isEmpty(realRules)){
+		if (!CollectionUtils.isEmpty(realRules)) {
 			Iterator<Entry<String, SimpleValueRule>> iterator = realRules.entrySet().iterator();
 			Entry<String, SimpleValueRule> entry = null;
 			while (iterator.hasNext()) {
@@ -74,12 +74,12 @@ public class SgckReComputeValueInterceptor implements CheckInterceptor, Initiali
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
 	@Override
-	public byte[] dealError(JSONObject message) throws Exception
+	public byte[] checkAfterError(JSONObject message) throws Exception
 	{
 		LOG.error("温度值重新赋值失败!" + message);
 
@@ -97,6 +97,20 @@ public class SgckReComputeValueInterceptor implements CheckInterceptor, Initiali
 		config.put("command_properties", RtnCommandProperties.ERROR_NOT_RETRY.ID);
 
 		return resolve.unresolve(RtnCodeType.Server_Gateway_ACK.ID, config);
+	}
+
+	@Override
+	public boolean checkBefore(byte[] orgData) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public byte[] checkBeforeError(byte[] orgData) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

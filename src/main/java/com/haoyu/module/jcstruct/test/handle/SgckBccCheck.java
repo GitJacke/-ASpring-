@@ -25,7 +25,7 @@ public class SgckBccCheck implements CheckInterceptor
 	}
 
 	@Override
-	public boolean check(JSONObject message) throws Exception
+	public boolean checkAfter(JSONObject message) throws Exception
 	{
 		byte bcc = computeBcc(message);
 		byte oldBcc = message.getByteValue("BCC");
@@ -98,7 +98,7 @@ public class SgckBccCheck implements CheckInterceptor
 	}
 
 	@Override
-	public byte[] dealError(JSONObject message) throws Exception
+	public byte[] checkAfterError(JSONObject message) throws Exception
 	{
 		LOG.error("校验BCC失败!当前解析内容:" + message);
 
@@ -116,6 +116,20 @@ public class SgckBccCheck implements CheckInterceptor
 		config.put("command_properties", RtnCommandProperties.ERROR_NOT_RETRY.ID);
 
 		return resolve.unresolve(RtnCodeType.Server_Gateway_ACK.ID, config);
+	}
+
+	@Override
+	public boolean checkBefore(byte[] orgData) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public byte[] checkBeforeError(byte[] orgData) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -83,17 +83,21 @@ public abstract class SocketConnection extends Thread implements Connection
 				PreReadResult preReadResult = preRead();
 				if (!preReadResult.isSkip()) {
 
-					ResolveResult<JSONObject> resolveResult = defaultResolve.resolve(preReadResult.getData(), null);
+					if (checkBefore(preReadResult.getData())) {
+						
+						ResolveResult<JSONObject> resolveResult = defaultResolve.resolve(preReadResult.getData(), null);
 
-					if (check(resolveResult)) {
-						// 进行数据处理
-						ResponseResult result = dispatchCenterService.handle(resolveResult.getId(), resolveResult.getResult());
-						// 判断是否需要返回
-						if (null != result.getData()) {
-							// 返回
-							sendMessage(result.getId(), result.getData());
+						if (checkAfter(resolveResult)) {
+							// 进行数据处理
+							ResponseResult result = dispatchCenterService.handle(resolveResult.getId(), resolveResult.getResult());
+							// 判断是否需要返回
+							if (null != result.getData()) {
+								// 返回
+								sendMessage(result.getId(), result.getData());
+							}
 						}
 					}
+
 				}
 
 			} catch (SocketException e) {
@@ -117,41 +121,73 @@ public abstract class SocketConnection extends Thread implements Connection
 
 	}
 
-	private boolean check(ResolveResult<JSONObject> resolveResult) throws Exception
+	private boolean checkBefore(byte[] orgData) throws Exception
 	{
-		//List<CheckInterceptor> matchs = new ArrayList<>();
-		
-		if(ArrayUtils.isNotEmpty(checkBeans.getGlobalCheck())){
-			if(!checkArray(checkBeans.getGlobalCheck(), resolveResult)){
+		if (ArrayUtils.isNotEmpty(checkBeans.getGlobalCheck())) {
+			if (!checkArrayBefore(checkBeans.getGlobalCheck(), orgData)) {
 				return false;
 			}
 		}
-		
+
+		return true;
+	}
+
+	private boolean checkArrayBefore(CheckInterceptor[] checks, byte[] orgData) throws DtuMessageException, IOException, Exception
+	{
+		for (CheckInterceptor interceptor : checks) {
+			if (!checkOneBefore(interceptor, orgData)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private boolean checkOneBefore(CheckInterceptor interceptor, byte[] orgData) throws DtuMessageException, IOException, Exception
+	{
+		if (!interceptor.checkBefore(orgData)) {
+			// 失败处理
+			byte[] sendData = interceptor.checkBeforeError(orgData);
+			sendMessage(sendData);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean checkAfter(ResolveResult<JSONObject> resolveResult) throws Exception
+	{
+		// List<CheckInterceptor> matchs = new ArrayList<>();
+
+		if (ArrayUtils.isNotEmpty(checkBeans.getGlobalCheck())) {
+			if (!checkArrayAfter(checkBeans.getGlobalCheck(), resolveResult)) {
+				return false;
+			}
+		}
+
 		if (checkBeans.getCheckInterceptorMapping().containsKey(resolveResult.getId())) {
 			CheckInterceptor[] checks = checkBeans.getCheckInterceptorMapping().get(resolveResult.getId());
 			if (ArrayUtils.isNotEmpty(checks)) {
-				return checkArray(checks, resolveResult);
+				return checkArrayAfter(checks, resolveResult);
 			}
 		}
-		
+
 		return true;
 	}
 
-	private boolean checkArray(CheckInterceptor[] checks, ResolveResult<JSONObject> resolveResult) throws DtuMessageException, IOException, Exception
+	private boolean checkArrayAfter(CheckInterceptor[] checks, ResolveResult<JSONObject> resolveResult) throws DtuMessageException, IOException, Exception
 	{
 		for (CheckInterceptor interceptor : checks) {
-			if (!checkOne(interceptor, resolveResult)) {
+			if (!checkOneAfter(interceptor, resolveResult)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
-	private boolean checkOne(CheckInterceptor interceptor, ResolveResult<JSONObject> resolveResult) throws DtuMessageException, IOException, Exception
+	private boolean checkOneAfter(CheckInterceptor interceptor, ResolveResult<JSONObject> resolveResult) throws DtuMessageException, IOException, Exception
 	{
-		if (!interceptor.check(resolveResult.getResult())) {
+		if (!interceptor.checkAfter(resolveResult.getResult())) {
 			// 失败处理
-			byte[] sendData = interceptor.dealError(resolveResult.getResult());
+			byte[] sendData = interceptor.checkAfterError(resolveResult.getResult());
 			sendMessage(sendData);
 			return false;
 		}
