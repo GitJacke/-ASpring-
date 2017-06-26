@@ -32,5 +32,11 @@ public class SocketConnectionImpl extends SocketConnection
 
 		return setPreReadSuccess(data);
 	}
+	
+	@Override
+	public boolean checkServerClose()
+	{
+		return isStop;
+	}
 
 }

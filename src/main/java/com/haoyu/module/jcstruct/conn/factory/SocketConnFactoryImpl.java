@@ -25,9 +25,9 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 	private int port = SystemConsts.port;
 
 	private int maxConnections = SystemConsts.maxConnections;
-	
+
 	private String headSign;
-	
+
 	private String footSign;
 
 	private Map<String, SocketConnection> connections;
@@ -39,9 +39,8 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 
 	@Autowired
 	private DefaultResolve defaultResolve;
-	
-	private volatile boolean isStop;
 
+	private volatile boolean isStop;
 
 	public void setHeadSign(String headSign)
 	{
@@ -93,7 +92,7 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 			serverSocket = new ServerSocket(port);
 			ServerSocketThread serverSocketThread = new ServerSocketThread(serverSocket);
 			serverSocketThread.start();
-			LOG.info("启动监听网关socketserver服务成功！服务信息:"+serverSocket.getLocalSocketAddress().toString());
+			LOG.info("启动监听网关socketserver服务成功！服务信息:" + serverSocket.getLocalSocketAddress().toString());
 		} catch (IOException e) {
 			LOG.error("启动SocketServer失败:" + e.getMessage(), e);
 		}
@@ -114,17 +113,17 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 	public void afterPropertiesSet() throws Exception
 	{
 		// 初始化一些参数
-		if(null != headSign){
+		if (null != headSign) {
 			SystemConsts.head = HexUtils.hexStringToBytes(headSign);
 		}
-		if(null != footSign){
+		if (null != footSign) {
 			SystemConsts.foot = HexUtils.hexStringToBytes(footSign);
 		}
-		
+
 		initConnections();
 		start();
-		//加入网关是否断电的检测
-		//new CheckSocketClientThread().start();
+		// 加入网关是否断电的检测
+		new CheckSocketClientThread().start();
 	}
 
 	public void addConnection(Socket socket)
@@ -133,6 +132,11 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 		SocketConnection connection = (SocketConnection) deciseConnection.decise(socket, dispatchCenterService, defaultResolve);
 
 		connections.put(connection.getConnectionKey(), connection);
+		
+		synchronized (connections) {
+			LOG.info("加入连接成功！唤醒检测线程!");
+			connections.notifyAll();
+		}
 
 		connection.startWork();
 	}
@@ -198,10 +202,16 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 		{
 
 			while (!isStop) {
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+
+				synchronized (connections) {
+					while (connections.isEmpty()) {
+						try {
+							LOG.info("客户端当前连接数为空，检测线程将进入挂起状态!");
+							connections.wait();
+						} catch (InterruptedException e) {
+							LOG.error("客户端当前连接数为空，检测线程将进入挂起状态异常",e);
+						}
+					}
 				}
 
 				Iterator<Entry<String, SocketConnection>> iterators = connections.entrySet().iterator();
@@ -209,10 +219,16 @@ public class SocketConnFactoryImpl extends AbstractConnFactory implements Socket
 				while (iterators.hasNext()) {
 					entry = iterators.next();
 					if (entry.getValue().checkServerClose()) {
-						LOG.info("客户机:" + entry.getKey()+",与服务器断开!");
+						LOG.info("客户机:" + entry.getKey() + ",与服务器断开!");
 						// 删除当前服务
 						connections.remove(entry.getKey());
 					}
+				}
+
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 

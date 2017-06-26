@@ -84,7 +84,7 @@ public abstract class SocketConnection extends Thread implements Connection
 				if (!preReadResult.isSkip()) {
 
 					if (checkBefore(preReadResult.getData())) {
-						
+
 						ResolveResult<JSONObject> resolveResult = defaultResolve.resolve(preReadResult.getData(), null);
 
 						if (checkAfter(resolveResult)) {
@@ -227,9 +227,6 @@ public abstract class SocketConnection extends Thread implements Connection
 	public boolean checkServerClose()
 	{
 		try {
-			if (isStop) {
-				return isStop;
-			}
 			socket.sendUrgentData(0xFF);// 发送1个字节的紧急数据，默认情况下，服务器端没有开启紧急数据处理，不影响正常通信
 			return false;
 		} catch (Exception se) {
