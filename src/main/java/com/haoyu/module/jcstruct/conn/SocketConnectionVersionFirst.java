@@ -63,11 +63,6 @@ public class SocketConnectionVersionFirst extends SocketConnection
 		return tmp;
 	}
 
-	@Override
-	public boolean checkServerClose()
-	{
-		return isStop;
-	}
 
 	@Override
 	public PreReadResult preRead() throws IOException

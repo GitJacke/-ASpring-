@@ -43,5 +43,7 @@ public final class SystemConsts
 	public static byte[] foot = new byte[] { -86, 85 };
 	
 	public static int maxRetryTimes = 3;
+	
+	public static long interval = 5 * 60 * 1000;//5分钟内
 
 }

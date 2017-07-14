@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.web.context.ContextLoader;
 
 public abstract class AbstractRefreshServiceManager implements RefreshServiceManagerService, ApplicationListener<ContextRefreshedEvent>
 {
@@ -13,6 +14,7 @@ public abstract class AbstractRefreshServiceManager implements RefreshServiceMan
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event)
 	{
+		//ContextLoader.getCurrentWebApplicationContext();
 		if (event.getApplicationContext().getParent() == null) {
 			try {
 				refresh(event.getApplicationContext());

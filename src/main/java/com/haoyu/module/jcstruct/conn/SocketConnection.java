@@ -35,7 +35,9 @@ public abstract class SocketConnection extends Thread implements Connection
 	final private CheckBeans checkBeans;
 
 	public abstract PreReadResult preRead() throws IOException;
-
+	
+	protected long lastReceiveTime;//上一次接受数据时间
+	
 	public SocketConnection(Socket socket, DispatchCenterService dispatchCenterService, DefaultResolve defaultResolve, CheckBeans checkBeans)
 	{
 		this.socket = socket;
@@ -76,11 +78,13 @@ public abstract class SocketConnection extends Thread implements Connection
 	@Override
 	public void run()
 	{
-
+		lastReceiveTime = System.currentTimeMillis();//第一次接入加入时间
 		while (!isStop) {
 			try {
 				// 预读
-				PreReadResult preReadResult = preRead();
+				PreReadResult preReadResult = preRead();//会有IO阻塞
+				lastReceiveTime = System.currentTimeMillis();//重置接收时间
+				long start = System.currentTimeMillis();
 				if (!preReadResult.isSkip()) {
 
 					if (checkBefore(preReadResult.getData())) {
@@ -95,6 +99,8 @@ public abstract class SocketConnection extends Thread implements Connection
 								// 返回
 								sendMessage(result.getId(), result.getData());
 							}
+							
+							LOG.info("本次请求"+resolveResult.getId()+"执行成功！时间:"+(System.currentTimeMillis() - start) + "ms");
 						}
 					}
 
@@ -226,12 +232,20 @@ public abstract class SocketConnection extends Thread implements Connection
 
 	public boolean checkServerClose()
 	{
-		try {
-			socket.sendUrgentData(0xFF);// 发送1个字节的紧急数据，默认情况下，服务器端没有开启紧急数据处理，不影响正常通信
-			return false;
-		} catch (Exception se) {
+//		try {
+//			socket.sendUrgentData(0xFF);// 发送1个字节的紧急数据，默认情况下，服务器端没有开启紧急数据处理，不影响正常通信
+//			return false;
+//		} catch (Exception se) {
+//			stopWork();
+//			return true;
+//		}
+		
+		//通过判断最后一次响应时间和现在时间做对比，检测不在线
+		if(lastReceiveTime < System.currentTimeMillis() - SystemConsts.interval){
 			stopWork();
 			return true;
+		}else{
+			return false;
 		}
 	}
 

@@ -7,4 +7,5 @@ public interface Connection
 	public void stopWork();
 	
 	public String getConnectionKey();
+	
 }

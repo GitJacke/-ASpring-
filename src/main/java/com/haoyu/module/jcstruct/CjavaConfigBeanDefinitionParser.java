@@ -67,6 +67,9 @@ public class CjavaConfigBeanDefinitionParser extends CjavaAbstractSingleBeanDefi
 		} else if (tag.equals("maxRetryTimes")) {
 			Integer maxRetryTimes = Integer.parseInt(value);
 			SystemConsts.maxRetryTimes = maxRetryTimes.intValue();
+		}else if (tag.equals("interval")) {
+			Integer interval = Integer.parseInt(value);
+			SystemConsts.interval = interval.intValue();
 		}
 
 	}
