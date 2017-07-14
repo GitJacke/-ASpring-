@@ -44,6 +44,7 @@ public abstract class SocketConnection extends Thread implements Connection
 		this.dispatchCenterService = dispatchCenterService;
 		this.defaultResolve = defaultResolve;
 		this.checkBeans = checkBeans;
+		this.lastReceiveTime = System.currentTimeMillis();//初始化接收时间
 	}
 
 	protected PreReadResult setPreReadSuccess(byte[] data)
