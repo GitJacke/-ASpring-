@@ -32,6 +32,11 @@ public class SocketConnectionImpl extends SocketConnection
 
 		return setPreReadSuccess(data);
 	}
-	
+
+	@Override
+	public boolean existsMultiple(int len)
+	{
+		return len > SystemConsts.max_read;
+	}
 
 }

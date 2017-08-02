@@ -1,18 +1,20 @@
 package com.haoyu.module.jcstruct.conn;
 
+import java.util.List;
+
 public class PreReadResult
 {
 
-	public byte[] data;
+	public List<byte[]> data;
 	
 	public boolean isSkip = true;
 
-	public byte[] getData()
+	public List<byte[]> getData()
 	{
 		return data;
 	}
 
-	public void setData(byte[] data)
+	public void setData(List<byte[]> data)
 	{
 		this.data = data;
 	}

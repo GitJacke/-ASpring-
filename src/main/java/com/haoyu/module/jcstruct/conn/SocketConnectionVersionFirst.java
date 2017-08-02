@@ -101,4 +101,10 @@ public class SocketConnectionVersionFirst extends SocketConnection
 		return setPreReadSkip();
 	}
 
+	@Override
+	public boolean existsMultiple(int len)
+	{
+		return len > SystemConsts.max_read_version_one;
+	}
+
 }
