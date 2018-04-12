@@ -25,7 +25,7 @@
 		"
 	default-lazy-init="false">
 
-        <!--  对于ByteArray等类型的特殊处理类，需要继承com.haoyu.module.jcstruct.opt.AbstractJFieldOpt-->	
+        <!-- 特殊处理类需要继承com.haoyu.module.jcstruct.opt.AbstractJFieldOpt-->
 	<bean id="byteArrayJFieldOpt" class="com.haoyu.module.jcstruct.opt.ByteArrayJFieldOpt"></bean>
   
 	<!-- 加入模板容器处理，默认实现类com.haoyu.module.jcstruct.template.DefaultTemplateContainer -->
