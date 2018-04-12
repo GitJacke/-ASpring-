@@ -25,7 +25,7 @@
 		"
 	default-lazy-init="false">
 
-        <!-- 对于ByteArray类型的特殊处理，该类需要继承com.haoyu.module.jcstruct.opt.AbstractJFieldOpt-->	
+        <!--  对于ByteArray等类型的特殊处理类，需要继承com.haoyu.module.jcstruct.opt.AbstractJFieldOpt-->	
 	<bean id="byteArrayJFieldOpt" class="com.haoyu.module.jcstruct.opt.ByteArrayJFieldOpt"></bean>
   
 	<!-- 加入模板容器处理，默认实现类com.haoyu.module.jcstruct.template.DefaultTemplateContainer -->
@@ -88,8 +88,8 @@ http://www.haoyu.com/schema/cjava/cjava-1.0.xsd
 		"
 	default-lazy-init="false">
 	
-    <!-- 协议头-->
-	<cjava:fch key="Package_Type"><!-- key用来定位协议ID的标识 -->
+        <!-- 协议头-->
+	<cjava:fch key="Package_Type"><!--key用来定位协议ID的标识-->
 		<cjava:field name="Constant_Up" type="ushort" desc="2字节，前导字符，固定为0XAAAA，表示为上行数据包-" />
 		<cjava:field name="Gateway_Id" type="unsigendint" desc="4字节，网关id号" />
 		<cjava:field name="Package_Type" type="char" desc="具体根据每个协议ID决定" />
