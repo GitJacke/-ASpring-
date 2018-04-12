@@ -24,7 +24,6 @@
         http://www.haoyu.com/schema/cjava/cjava-1.0.xsd
 		"
 	default-lazy-init="false">
-
         <!-- 特殊处理类需要继承com.haoyu.module.jcstruct.opt.AbstractJFieldOpt-->
 	<bean id="byteArrayJFieldOpt" class="com.haoyu.module.jcstruct.opt.ByteArrayJFieldOpt"></bean>
   
