@@ -1,19 +1,16 @@
 # 介绍
-```java 
    描述：为了解决java与C结构通信过程中结构体解析问题。
    主要功能：能友好的用java处理任何发送的C结构体对象，并且能发送java对象转换成C结构体接收的二进制。
-```
 
 # 功能说明
-```java
 1、基于spring框架开发
 2、对于结构体定义采用可视化XML配置，便于维护与调试，防止协议多次修改带来的麻烦。
 3、所有关健解析操作都基于接口开发，有默认实现，也可以用于自定义实现，能满足所有特殊业务解析需求。
 4、配置简单，使用方便、易上手。
-```
 # 使用实例
-```java
+
 1、全局配置
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -28,41 +25,45 @@
 		"
 	default-lazy-init="false">
 
- <!-- 对于ByteArray类型的特殊处理，该类需要继承com.haoyu.module.jcstruct.opt.AbstractJFieldOpt-->	
+        <!-- 对于ByteArray类型的特殊处理，该类需要继承com.haoyu.module.jcstruct.opt.AbstractJFieldOpt-->	
 	<bean id="byteArrayJFieldOpt" class="com.haoyu.module.jcstruct.opt.ByteArrayJFieldOpt"></bean>
   
 	<!-- 加入模板容器处理，默认实现类com.haoyu.module.jcstruct.template.DefaultTemplateContainer -->
 	<cjava:templateContainer/>
   
-  <!-- 解析管理类，默认com.haoyu.module.jcstruct.opt.DefaultOptManager，继承com.haoyu.module.jcstruct.opt.AbstractOptManager-->
+          <!-- 解析管理类，默认com.haoyu.module.jcstruct.opt.DefaultOptManager，继承
+                             com.haoyu.module.jcstruct.opt.AbstractOptManager-->
 	<cjava:optManager class="com.haoyu.module.jcstruct.opt.OptManagerForDebug">
-   <!-- 对于ByteArray类型的解析的特殊处理->	
+        <!-- 对于ByteArray类型的解析的特殊处理->	
   <cjava:optManagerOne key="bytearray" value-ref="byteArrayJFieldOpt"/>
   </cjava:optManager>
   
-  <!-- 调度中心配置，该类主要用于处理不同协议的业务处理，并返回处理结果。默认实现类:com.haoyu.module.jcstruct.dispatch.DefaultDispatchCenterServiceImpl，自定义实现需要继承AbstractDispatchCenterService-->	
+         <!-- 调度中心配置，该类主要用于处理不同协议的业务处理，并返回处理结果。默认实现
+          类:com.haoyu.module.jcstruct.dispatch.DefaultDispatchCenterServiceImpl，自定义实现需要继承
+          AbstractDispatchCenterService-->	
 	<cjava:dispatchCenterService/>
   
-  <!-- 启动加载完成后的自定义刷新管理类，用于加载完成后从spring集合里取出指定类型或者指定KEY的对象，具体刷新类需要实现RefreshService接口，默认实现类:com.haoyu.module.jcstruct.refresh.RefreshServiceManager-->
+         <!-- 启动加载完成后的自定义刷新管理类，用于加载完成后从spring集合里取出指定类型或者指定KEY的对象，具体刷新类需要实现
+         RefreshService接口，默认实现类:com.haoyu.module.jcstruct.refresh.RefreshServiceManager-->
 	<cjava:refreshManager/>
 	
-  <!-- 测试类的包路径加入到spring-->
+         <!-- 测试类的包路径加入到spring-->
 	<context:component-scan base-package="com.haoyu.module.jcstruct.test.handle" />
 	
-  <!-- 解析的辅助类加入到spring-->
+         <!-- 解析的辅助类加入到spring-->
 	<context:component-scan base-package="com.haoyu.module.jcstruct.resolve" />
 
-  <!-- 启动检查字段-->
+         <!-- 启动检查字段-->
 	<cjava:check/> 
 
-  <!-- 接收C结构体定义XML-->
-  <import resource="spring-cjava-fc.xml"/>
+         <!-- 接收C结构体定义XML-->
+         <import resource="spring-cjava-fc.xml"/>
     
-  <!-- 返回C结构体的协议定义XML->
-  <import resource="spring-cjava-tc.xml"/>
+         <!-- 返回C结构体的协议定义XML->
+         <import resource="spring-cjava-tc.xml"/>
 	
 </beans>
-
+```
 说明：
 spring头文件需要加入
 xmlns:cjava="http://www.haoyu.com/schema/cjava"
@@ -70,9 +71,10 @@ xsi:schemaLocation中需要加入
 http://www.haoyu.com/schema/cjava
 http://www.haoyu.com/schema/cjava/cjava-1.0.xsd
 对自定义cjava标签支持。
-```
-```java
+
+
 2、结构体协议配置(举例)
+```java
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cjava="http://www.haoyu.com/schema/cjava"
@@ -196,10 +198,12 @@ http://www.haoyu.com/schema/cjava/cjava-1.0.xsd
 	</cjava:fct>
 	
 </beans>
-注：返回给C结构的协议类同参考包下面的spring-cjava-tc.xml
 ```
-```java
+注：返回给C结构的协议类同参考包下面的spring-cjava-tc.xml
+
+
 3、自定义业务实现（举例，对特征值解析以后的处理）
+```java
 package com.haoyu.module.jcstruct.test.handle;
 
 import java.util.Date;
@@ -304,8 +308,9 @@ public class HandleCharacterMessage extends AbstractHandleMessageService impleme
 
 ```
 
-```java
+
 4、测试代码
+```java
 package com.haoyu.module.jcstruct;
 
 import java.io.IOException;
