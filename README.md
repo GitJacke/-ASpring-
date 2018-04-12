@@ -87,7 +87,6 @@ http://www.haoyu.com/schema/cjava/cjava-1.0.xsd
 		"
 	default-lazy-init="false">
 	
-        <!-- 协议头-->
 	<cjava:fch key="Package_Type"><!--key用来定位协议ID的标识-->
 		<cjava:field name="Constant_Up" type="ushort" desc="2字节，前导字符，固定为0XAAAA，表示为上行数据包-" />
 		<cjava:field name="Gateway_Id" type="unsigendint" desc="4字节，网关id号" />
