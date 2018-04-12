@@ -57,8 +57,8 @@
 
          <!-- 接收C结构体定义XML-->
          <import resource="spring-cjava-fc.xml"/>
-    
-         <!-- 返回C结构体的协议定义XML->
+
+         <!-- 返回C结构体协议的XML-->
          <import resource="spring-cjava-tc.xml"/>
 	
 </beans>
