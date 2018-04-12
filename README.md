@@ -10,7 +10,7 @@
 # 使用实例
 
 1、全局配置
-```java
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -73,7 +73,7 @@ http://www.haoyu.com/schema/cjava/cjava-1.0.xsd
 
 
 2、结构体协议配置(举例)
-```java
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cjava="http://www.haoyu.com/schema/cjava"
